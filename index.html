@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy tính Web (Basic Mode)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator-grid">
+        <div class="display">
+            <div class="display-header">
+                <button class="history-button" data-action="history">🕐</button>
+            </div>
+            <div class="previous-operand"></div>
+            <div class="current-operand">0</div>
+        </div>
+        <button data-action="percent">%</button>
+        <button data-action="clear-entry">CE</button>
+        <button data-action="clear">C</button>
+        <button data-action="backspace">←</button>
+        <button data-action="inverse">1/x</button>
+        <button data-action="square">x²</button>
+        <button data-action="sqrt">√</button>
+        <button data-operation="divide">÷</button>
+        <button data-number="7">7</button>
+        <button data-number="8">8</button>
+        <button data-number="9">9</button>
+        <button data-operation="multiply">×</button>
+        <button data-number="4">4</button>
+        <button data-number="5">5</button>
+        <button data-number="6">6</button>
+        <button data-operation="subtract">−</button>
+        <button data-number="1">1</button>
+        <button data-number="2">2</button>
+        <button data-number="3">3</button>
+        <button data-operation="add">+</button>
+        <button data-action="negate">±</button>
+        <button data-number="0">0</button>
+        <button data-number=".">.</button>
+        <button data-action="equals">=</button>
+    </div>
+    
+    <!-- Modal lịch sử -->
+    <div class="history-modal" id="historyModal">
+        <div class="history-content">
+            <div class="history-header">
+                <h3>Lịch sử</h3>
+                <button class="close-history" id="closeHistory">×</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="no-history">Chưa có lịch sử</div>
+            </div>
+            <div class="history-actions">
+                <button class="clear-history-btn" id="clearHistory">🗑️ Xóa lịch sử</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
