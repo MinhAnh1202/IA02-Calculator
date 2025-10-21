@@ -9,6 +9,20 @@ class Calculator {
         this.clear();
     }
 
+    // Làm tròn số để tránh lỗi floating point
+    roundResult(number) {
+        // Làm tròn đến 10 chữ số thập phân để tránh lỗi floating point
+        const rounded = Math.round(number * 1e10) / 1e10;
+        
+        // Nếu là số nguyên, trả về số nguyên
+        if (rounded % 1 === 0) {
+            return rounded.toString();
+        }
+        
+        // Loại bỏ các số 0 thừa ở cuối
+        return rounded.toString().replace(/\.?0+$/, '');
+    }
+
     // Xóa toàn bộ (nút C)
     clear() {
         this.currentOperand = '0';
@@ -123,7 +137,7 @@ class Calculator {
                 return;
         }
 
-        this.currentOperand = computation.toString();
+        this.currentOperand = this.roundResult(computation);
         this.operation = undefined;
         this.previousOperand = fullExpression; // Hiển thị phép tính hoàn chỉnh
         this.percentCompleted = false; // Reset flag
@@ -146,7 +160,7 @@ class Calculator {
 
         switch (action) {
             case 'negate': // Nút ±
-                computation = (current * -1).toString();
+                computation = this.roundResult(current * -1);
                 historyExpression = `negate(${this.currentOperand})`;
                 this.previousOperand = historyExpression;
                 this.operation = undefined;
@@ -154,10 +168,15 @@ class Calculator {
                 break;
             case 'sqrt': // Nút √
                 if (current < 0) {
-                    alert("Đầu vào không hợp lệ cho căn bậc hai");
+                    this.currentOperand = "Invalid input";
+                    this.previousOperand = '';
+                    this.operation = undefined;
+                    this.hasError = true;
+                    this.updateDisplay();
+                    this.updateButtonStates();
                     return;
                 }
-                computation = Math.sqrt(current).toString();
+                computation = this.roundResult(Math.sqrt(current));
                 historyExpression = `√(${this.currentOperand})`;
                 this.previousOperand = historyExpression;
                 this.operation = undefined;
@@ -167,7 +186,7 @@ class Calculator {
                 // Logic % của Windows: khi có phép toán đang chờ, % tính theo số trước đó
                 if (this.previousOperand !== '' && this.operation) {
                     const prev = parseFloat(this.previousOperand);
-                    computation = (prev * (current / 100)).toString();
+                    computation = this.roundResult(prev * (current / 100));
                     // Cập nhật previousOperand để hiển thị phép tính với giá trị %
                     const operationSymbol = this.operation === '−' ? '−' : 
                                           this.operation === '×' ? '×' : 
@@ -179,7 +198,7 @@ class Calculator {
                     // Không xóa operation vì vẫn cần để tính toán khi ấn =
                 } else {
                     // Nếu không có phép toán trước đó, % = current/100
-                    computation = (current / 100).toString();
+                    computation = this.roundResult(current / 100);
                     historyExpression = `${this.currentOperand}%`;
                     this.previousOperand = historyExpression;
                     this.operation = undefined;
@@ -189,7 +208,7 @@ class Calculator {
             // Các nút 1/x và x² từ giao diện HTML
             case 'inverse': // 1/x
                 if (current === 0) {
-                    this.currentOperand = "Không thể chia cho 0";
+                    this.currentOperand = "Cannot divided by 0";
                     this.previousOperand = '';
                     this.operation = undefined;
                     this.hasError = true;
@@ -197,14 +216,14 @@ class Calculator {
                     this.updateButtonStates();
                     return;
                 }
-                computation = (1 / current).toString();
+                computation = this.roundResult(1 / current);
                 historyExpression = `1/(${this.currentOperand})`;
                 this.previousOperand = historyExpression;
                 this.operation = undefined;
                 this.readyToReset = true;
                 break;
             case 'square': // x²
-                computation = (current * current).toString();
+                computation = this.roundResult(current * current);
                 historyExpression = `sqr(${this.currentOperand})`;
                 this.previousOperand = historyExpression;
                 this.operation = undefined;
